@@ -3,8 +3,6 @@ package traceloop
 import (
 	"context"
 	"fmt"
-	"log"
-	"net/http"
 	"os"
 	"time"
 
@@ -22,7 +20,6 @@ type Traceloop struct {
 	config         Config
 	promptRegistry model.PromptRegistry
 	tracerProvider *trace.TracerProvider
-	http.Client
 }
 
 type LLMSpan struct {
@@ -33,7 +30,6 @@ func NewClient(ctx context.Context, config Config) (*Traceloop, error) {
 	instance := Traceloop{
 		config:         config,
 		promptRegistry: make(model.PromptRegistry),
-		Client:         http.Client{},
 	}
 
 	err := instance.initialize(ctx)
@@ -63,9 +59,6 @@ func (instance *Traceloop) initialize(ctx context.Context) error {
 		}
 	}
 
-	log.Printf("Traceloop %s SDK initialized. Connecting to %s\n", Version(), instance.config.BaseURL)
-
-	instance.pollPrompts()
 	err := instance.initTracer(ctx, instance.config.ServiceName)
 	if err != nil {
 		return err
