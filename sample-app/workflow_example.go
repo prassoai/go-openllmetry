@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
+	tlp "github.com/prassoai/go-openllmetry/traceloop-sdk"
 	"github.com/sashabaranov/go-openai"
-	tlp "github.com/traceloop/go-openllmetry/traceloop-sdk"
 )
 
 func main() {
