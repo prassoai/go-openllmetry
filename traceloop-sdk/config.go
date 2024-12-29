@@ -1,7 +1,7 @@
 package traceloop
 
 import (
-	otlp "go.opentelemetry.io/otel/exporters/otlp/otlptrace"
+	"go.opentelemetry.io/otel/sdk/trace"
 	"time"
 )
 
@@ -16,5 +16,5 @@ type Config struct {
 	ServiceName     string
 	PollingInterval time.Duration
 	BackoffConfig   BackoffConfig
-	Exporter        *otlp.Exporter
+	Exporter        trace.SpanExporter
 }

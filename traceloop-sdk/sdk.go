@@ -11,14 +11,12 @@ import (
 	apitrace "go.opentelemetry.io/otel/trace"
 
 	semconvai "github.com/prassoai/go-openllmetry/semconv-ai"
-	"github.com/prassoai/go-openllmetry/traceloop-sdk/model"
 )
 
 const PromptsPath = "/v1/traceloop/prompts"
 
 type Traceloop struct {
 	config         Config
-	promptRegistry model.PromptRegistry
 	tracerProvider *trace.TracerProvider
 }
 
@@ -28,8 +26,7 @@ type LLMSpan struct {
 
 func NewClient(ctx context.Context, config Config) (*Traceloop, error) {
 	instance := Traceloop{
-		config:         config,
-		promptRegistry: make(model.PromptRegistry),
+		config: config,
 	}
 
 	err := instance.initialize(ctx)

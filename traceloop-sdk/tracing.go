@@ -70,7 +70,7 @@ func newGenericExporter(ctx context.Context) (*otlp.Exporter, error) {
 	}
 }
 
-func newOtlpExporter(ctx context.Context, config Config) (*otlp.Exporter, error) {
+func newOtlpExporter(ctx context.Context, config Config) (trace.SpanExporter, error) {
 	if config.Exporter != nil {
 		return config.Exporter, nil
 	} else if os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT") == "" {
