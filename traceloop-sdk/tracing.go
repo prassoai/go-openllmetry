@@ -71,7 +71,9 @@ func newGenericExporter(ctx context.Context) (*otlp.Exporter, error) {
 }
 
 func newOtlpExporter(ctx context.Context, config Config) (*otlp.Exporter, error) {
-	if os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT") == "" {
+	if config.Exporter != nil {
+		return config.Exporter, nil
+	} else if os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT") == "" {
 		return newTraceloopExporter(ctx, config)
 	} else {
 		return newGenericExporter(ctx)

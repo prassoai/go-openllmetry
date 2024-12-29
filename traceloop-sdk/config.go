@@ -1,6 +1,9 @@
 package traceloop
 
-import "time"
+import (
+	otlp "go.opentelemetry.io/otel/exporters/otlp/otlptrace"
+	"time"
+)
 
 type BackoffConfig struct {
 	MaxRetries uint64
@@ -13,4 +16,5 @@ type Config struct {
 	ServiceName     string
 	PollingInterval time.Duration
 	BackoffConfig   BackoffConfig
+	Exporter        *otlp.Exporter
 }
