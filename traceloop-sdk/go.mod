@@ -1,4 +1,4 @@
-module github.com/traceloop/go-openllmetry/traceloop-sdk
+module github.com/prassoai/go-openllmetry/traceloop-sdk
 
 go 1.21
 

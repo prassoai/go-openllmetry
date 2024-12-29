@@ -1,4 +1,4 @@
-module github.com/traceloop/go-openllmetry/semconv-ai
+module github.com/prassoai/go-openllmetry/semconv-ai
 
 go 1.21
 

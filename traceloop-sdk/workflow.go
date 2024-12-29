@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	semconvai "github.com/traceloop/go-openllmetry/semconv-ai"
+	semconvai "github.com/prassoai/go-openllmetry/semconv-ai"
 	"go.opentelemetry.io/otel/trace"
 )
 

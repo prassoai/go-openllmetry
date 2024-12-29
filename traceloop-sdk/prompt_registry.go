@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/kluctl/go-jinja2"
+	"github.com/prassoai/go-openllmetry/traceloop-sdk/model"
 	"github.com/sashabaranov/go-openai"
-	"github.com/traceloop/go-openllmetry/traceloop-sdk/model"
 )
 
 type PromptsResponse struct {

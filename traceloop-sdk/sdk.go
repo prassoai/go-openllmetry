@@ -12,8 +12,8 @@ import (
 	"go.opentelemetry.io/otel/sdk/trace"
 	apitrace "go.opentelemetry.io/otel/trace"
 
-	semconvai "github.com/traceloop/go-openllmetry/semconv-ai"
-	"github.com/traceloop/go-openllmetry/traceloop-sdk/model"
+	semconvai "github.com/prassoai/go-openllmetry/semconv-ai"
+	"github.com/prassoai/go-openllmetry/traceloop-sdk/model"
 )
 
 const PromptsPath = "/v1/traceloop/prompts"
