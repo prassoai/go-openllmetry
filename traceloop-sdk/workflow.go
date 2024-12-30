@@ -21,7 +21,7 @@ type Task struct {
 }
 
 func (instance *Traceloop) NewWorkflow(ctx context.Context, attrs WorkflowAttributes) *Workflow {
-	wCtx, span := instance.getTracer().Start(ctx, fmt.Sprintf("%s.workflow", attrs.Name), trace.WithNewRoot())
+	wCtx, span := instance.Tracer.Start(ctx, fmt.Sprintf("%s.workflow", attrs.Name), trace.WithNewRoot())
 
 	span.SetAttributes(
 		semconvai.TraceloopWorkflowName.String(attrs.Name),
@@ -45,7 +45,7 @@ func (workflow *Workflow) LogPrompt(prompt Prompt) (LLMSpan, error) {
 }
 
 func (workflow *Workflow) NewTask(name string) *Task {
-	tCtx, span := workflow.sdk.getTracer().Start(workflow.ctx, fmt.Sprintf("%s.task", name))
+	tCtx, span := workflow.sdk.Tracer.Start(workflow.ctx, fmt.Sprintf("%s.task", name))
 
 	span.SetAttributes(
 		semconvai.TraceloopWorkflowName.String(workflow.Attributes.Name),

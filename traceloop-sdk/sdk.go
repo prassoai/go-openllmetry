@@ -3,65 +3,25 @@ package traceloop
 import (
 	"context"
 	"fmt"
-	"os"
-	"time"
-
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/sdk/trace"
 	apitrace "go.opentelemetry.io/otel/trace"
 
 	semconvai "github.com/prassoai/go-openllmetry/semconv-ai"
 )
 
-const PromptsPath = "/v1/traceloop/prompts"
-
 type Traceloop struct {
-	config         Config
-	tracerProvider *trace.TracerProvider
+	Tracer apitrace.Tracer
 }
 
 type LLMSpan struct {
 	span apitrace.Span
 }
 
-func NewClient(ctx context.Context, config Config) (*Traceloop, error) {
+func NewClient(tracer apitrace.Tracer) (*Traceloop, error) {
 	instance := Traceloop{
-		config: config,
+		Tracer: tracer,
 	}
-
-	err := instance.initialize(ctx)
-	if err != nil {
-		return nil, err
-	}
-
 	return &instance, nil
-}
-
-func (instance *Traceloop) initialize(ctx context.Context) error {
-	if instance.config.BaseURL == "" {
-		baseUrl := os.Getenv("TRACELOOP_BASE_URL")
-		if baseUrl == "" {
-			instance.config.BaseURL = "api.traceloop.com"
-		} else {
-			instance.config.BaseURL = baseUrl
-		}
-	}
-
-	if instance.config.PollingInterval == 0 {
-		pollingInterval := os.Getenv("TRACELOOP_SECONDS_POLLING_INTERVAL")
-		if pollingInterval == "" {
-			instance.config.PollingInterval = 5 * time.Second
-		} else {
-			instance.config.PollingInterval, _ = time.ParseDuration(pollingInterval)
-		}
-	}
-
-	err := instance.initTracer(ctx, instance.config.ServiceName)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func setMessagesAttribute(span apitrace.Span, prefix string, messages []Message) {
@@ -74,21 +34,9 @@ func setMessagesAttribute(span apitrace.Span, prefix string, messages []Message)
 	}
 }
 
-func (instance *Traceloop) tracerName() string {
-	if instance.config.TracerName != "" {
-		return instance.config.TracerName
-	} else {
-		return "traceloop.tracer"
-	}
-}
-
-func (instance *Traceloop) getTracer() apitrace.Tracer {
-	return (*instance.tracerProvider).Tracer(instance.tracerName())
-}
-
 func (instance *Traceloop) LogPrompt(ctx context.Context, prompt Prompt, workflowAttrs WorkflowAttributes) (LLMSpan, error) {
 	spanName := fmt.Sprintf("%s.%s", prompt.Vendor, prompt.Mode)
-	_, span := instance.getTracer().Start(ctx, spanName)
+	_, span := instance.Tracer.Start(ctx, spanName)
 
 	span.SetAttributes(
 		semconvai.LLMVendor.String(prompt.Vendor),
@@ -117,10 +65,4 @@ func (llmSpan *LLMSpan) LogCompletion(ctx context.Context, completion Completion
 	defer llmSpan.span.End()
 
 	return nil
-}
-
-func (instance *Traceloop) Shutdown(ctx context.Context) {
-	if instance.tracerProvider != nil {
-		instance.tracerProvider.Shutdown(ctx)
-	}
 }
